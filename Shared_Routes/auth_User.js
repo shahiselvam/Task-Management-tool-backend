@@ -143,6 +143,7 @@ router.get("/activate/:token" , async (req, res) => {
     
            else{
              await generateToken(user,res);
+              return res.json({result: "success" , message : "Login Successsfully", user });
            }
         
     
