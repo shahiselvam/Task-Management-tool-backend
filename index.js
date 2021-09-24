@@ -28,7 +28,7 @@ app.use(cors({
      credentials: true,
     origin: [
     
-    'https://mystifying-roentgen-aae094.netlify.app'
+    'http://localhost:3000/'
     
   ]
  }));
@@ -56,7 +56,7 @@ try{
    
 }
 catch(err){
-    res.redirect('https://mystifying-roentgen-aae094.netlify.app/login')
+    res.redirect('http://localhost:3000/')
     res.json({error: err} )
 }
 }
