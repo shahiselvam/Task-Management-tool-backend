@@ -28,7 +28,7 @@ app.use(function(req, res, next) {
 app.use(cors({
     origin: [
     
-    'http://localhost:3000'
+    'https://mystifying-roentgen-aae094.netlify.app'
     
   ],
   credentials: true}));
