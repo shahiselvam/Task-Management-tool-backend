@@ -65,7 +65,8 @@ router.get("/topprojects", async (req, res) => {
     }
 
     else {
-        const Project  = await mongodb.db.collection("Projects").find({team:req.user.team}).limit(4).sort({$natural:-1}).toArray();
+       
+        const Project  = await mongodb.db.collection("Projects").find({team: req.user.team}).limit(4).sort({$natural:-1}).toArray();
 
         res.send({ result: "Success", Project });
     }

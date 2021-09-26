@@ -21,6 +21,8 @@ router.post("/Assigntask" , async (req, res) => {
 
             const user = await mongodb.db.collection("Users").findOne({ _id: ObjectId(req.body.userId) })
 
+        var date = new Date(req.body.taskdueDate);
+
 
             const task = 
             {
@@ -31,7 +33,8 @@ router.post("/Assigntask" , async (req, res) => {
              userName:user.FirstName,
              team:req.body.team,
              taskdueDate:req.body.taskdueDate,
-             status:"Assigned",
+             lastdate:date,
+             status:"Pending",
              
             }
 
@@ -71,27 +74,37 @@ router.get("/CountAssigned/:id" , async (req , res) => {
  
         const  CountAssigned  = await mongodb.db.collection("Tasks").find({projectId:req.params.id}).count();
 
-        res.send({CountAssigned});
+        res.status(200).send(CountAssigned.toString());
 })
 
 router.get("/CountPending/:id" , async (req , res) => {
 
 
-    const  CountPending   = await mongodb.db.collection("Tasks").find({$and:[{projectId:req.params.id} , {status:"Pending"}]}).count();
+    const  CountPending   = await mongodb.db.collection("Tasks").find({$and:[{projectId:req.params.id} ,{status:"Pending"}]}).count();
 
-    res.send({CountPending});
+    res.status(200).send(CountPending.toString());
 })
 router.get("/CountCompleted/:id" , async (req , res) => {
 
  
     const  CountCompleted  = await mongodb.db.collection("Tasks").find({$and:[{projectId:req.params.id} ,{status:"Completed"}]}).count();
 
-    res.send({CountCompleted});
+    res.status(200).send(CountCompleted.toString());
 })
 router.put("/Assigntask/:id" , async (req, res) =>{
 
     const  data  = await mongodb.db.collection("Tasks").updateOne({ _id: ObjectId(req.params.id)} , {$set: { status : req.body.status }});
     res.send({ result: "Success", data});
-} )
+})
+
+router.get("/criticalTask/:id" , async (req , res) =>{
+    const today = new Date()
+    const criticaldate = new Date(today)
+    criticaldate.setDate(criticaldate.getDate() + 7)
+
+    const data =  await mongodb.db.collection("Tasks").find({$and:[{lastdate:{$lt: new Date(criticaldate)}} ,{projectId:req.params.id} ,{status:"Pending"}]}).toArray()
+    res.send({data});
+})
+
 
 module.exports = router
